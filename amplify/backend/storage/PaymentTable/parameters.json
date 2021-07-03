@@ -1,0 +1,7 @@
+{
+    "tableName": "PaymentTable",
+    "partitionKeyName": "email",
+    "partitionKeyType": "S",
+    "sortKeyName": "registration_date",
+    "sortKeyType": "S"
+}

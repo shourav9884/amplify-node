@@ -1,0 +1,54 @@
+{
+  "paths": [
+    {
+      "name": "/userapi",
+      "lambdaFunction": "userapilambda",
+      "privacy": {
+        "open": true
+      },
+      "policyResourceName": "/userapi"
+    },
+    {
+      "name": "/payment",
+      "lambdaFunction": "paymentapilamda",
+      "privacy": {
+        "open": true
+      },
+      "policyResourceName": "/payment"
+    }
+  ],
+  "resourceName": "apieda218d0",
+  "apiName": "apieda218d0",
+  "functionArns": [
+    {
+      "lambdaFunction": "userapilambda"
+    },
+    {
+      "lambdaFunction": "paymentapilamda"
+    }
+  ],
+  "privacy": {
+    "auth": 0,
+    "unauth": 0,
+    "authRoleName": "amplify-amplifynode-dev-231329-authRole",
+    "unAuthRoleName": "amplify-amplifynode-dev-231329-unauthRole"
+  },
+  "dependsOn": [
+    {
+      "category": "function",
+      "resourceName": "userapilambda",
+      "attributes": [
+        "Name",
+        "Arn"
+      ]
+    },
+    {
+      "category": "function",
+      "resourceName": "paymentapilamda",
+      "attributes": [
+        "Name",
+        "Arn"
+      ]
+    }
+  ]
+}

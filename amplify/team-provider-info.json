@@ -1,0 +1,27 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amplifynode-dev-231329-authRole",
+      "UnauthRoleArn": "arn:aws:iam::469518143802:role/amplify-amplifynode-dev-231329-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::469518143802:role/amplify-amplifynode-dev-231329-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-amplifynode-dev-231329-deployment",
+      "UnauthRoleName": "amplify-amplifynode-dev-231329-unauthRole",
+      "StackName": "amplify-amplifynode-dev-231329",
+      "StackId": "arn:aws:cloudformation:ap-south-1:469518143802:stack/amplify-amplifynode-dev-231329/0119d100-dc22-11eb-aa9b-0a02e1733e84",
+      "AmplifyAppId": "d3xyo21j3dqm7"
+    },
+    "categories": {
+      "function": {
+        "paymentapilamda": {
+          "deploymentBucketName": "amplify-amplifynode-dev-231329-deployment",
+          "s3Key": "amplify-builds/paymentapilamda-4a2f634a6f7551617541-build.zip"
+        },
+        "userapilambda": {
+          "deploymentBucketName": "amplify-amplifynode-dev-231329-deployment",
+          "s3Key": "amplify-builds/userapilambda-567563776636704c4444-build.zip"
+        }
+      }
+    }
+  }
+}
