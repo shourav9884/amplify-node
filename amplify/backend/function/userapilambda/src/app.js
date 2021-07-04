@@ -1,4 +1,13 @@
-/*
+/* Amplify Params - DO NOT EDIT
+	ENV
+	REGION
+	STORAGE_PAYMENTTABLE_ARN
+	STORAGE_PAYMENTTABLE_NAME
+	STORAGE_PAYMENTTABLE_STREAMARN
+	STORAGE_USERTABLE_ARN
+	STORAGE_USERTABLE_NAME
+	STORAGE_USERTABLE_STREAMARN
+Amplify Params - DO NOT EDIT *//*
 Copyright 2017 - 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
     http://aws.amazon.com/apache2.0/
@@ -16,7 +25,7 @@ AWS.config.update({ region: process.env.TABLE_REGION });
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-let tableName = "PaymentTable";
+let tableName = "UserTable";
 if(process.env.ENV && process.env.ENV !== "NONE") {
   tableName = tableName + '-' + process.env.ENV;
 }
@@ -52,12 +61,12 @@ const convertUrlType = (param, type) => {
   }
 }
 
-const updateUser = (user) => {
+const updateUser = (user, response) => {
   var paramsToUpdate = {
     TableName: tableName,
     Key:{
       "email": user['email'],
-      "registration_date": user['registration_date']
+      "date": user['date']
     },
     UpdateExpression: "set balance = :balance, user_name=:name, queries=:queries, active=:active, credit=:credit",
     ExpressionAttributeValues:{
@@ -72,10 +81,10 @@ const updateUser = (user) => {
   dynamodb.update(paramsToUpdate, function(err, data) {
     if (err) {
         console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
-        return false
+        response.status(500).send(err)
     } else {
         console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
-        return true
+        response.send({"msg": "Updated successfully"})
     }
   });
 }
@@ -88,6 +97,56 @@ const updateUser = (user) => {
 app.get('/userapi', function(req, res) {
   // Add your code here
   dynamodb.scan({TableName: tableName}, function(err, data) {
+    if (err) {
+        console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+        res.status(500).send(err)
+    } else {
+        console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+        res.send(data['Items'])
+    }
+  });
+});
+
+
+
+app.get('/userapi/active', function(req, res) {
+  // Add your code here
+  var params = {
+    TableName: tableName,
+    IndexName: 'status_idx',
+    KeyConditionExpression: "#active = :active",
+    ExpressionAttributeNames:{
+        "#active": "active"
+    },
+    ExpressionAttributeValues: {
+        ":active": 1
+    }
+  }
+  dynamodb.query(params, function(err, data) {
+    if (err) {
+        console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+        res.status(500).send(err)
+    } else {
+        console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+        res.send(data['Items'])
+    }
+  });
+});
+
+app.get('/userapi/inactive', function(req, res) {
+  // Add your code here
+  var params = {
+    TableName: tableName,
+    IndexName: 'status_idx',
+    KeyConditionExpression: "#active = :active",
+    ExpressionAttributeNames:{
+        "#active": "active"
+    },
+    ExpressionAttributeValues: {
+        ":active": 0
+    }
+  }
+  dynamodb.query(params, function(err, data) {
     if (err) {
         console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
         res.status(500).send(err)
@@ -141,6 +200,37 @@ app.post('/userapi', function(req, res) {
   });
 });
 
+app.get('/userapi/:email/payment-fields', (req, res) => {
+  var params = {
+    TableName: tableName,
+    KeyConditionExpression: "#email = :email",
+    ExpressionAttributeNames:{
+        "#email": "email"
+    },
+    ExpressionAttributeValues: {
+        ":email": req.params.email
+    }
+  }
+  dynamodb.query(params, function(err, data) {
+    if (err) {
+        console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+        res.status(500).send(err)
+    } else {
+        console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+        if(data['Items'].length == 0) {
+          res.status(404).send({"msg": "User not found"})
+        } else {
+          var body = {
+            "credit": data['Items'][0]['credit'],
+            "balance": data['Items'][0]['balance'],
+            "queries": data['Items'][0]['queries'],
+          }
+          res.send(body)
+        }
+    }
+  });
+})
+
 // app.post('/userapi/*', function(req, res) {
 //   // Add your code here
 //   res.json({success: 'post call succeed!', url: req.url, body: req.body})
@@ -173,9 +263,9 @@ app.put('/userapi/:email/activate', function(req, res) {
         } else {
           var user = data['Items'][0]
           user['active'] = 1
-          var result = updateUser(user)
-          console.log(result)
-          res.send({"msg": "Activated successfully"})
+          var result = updateUser(user, res)
+          // console.log(result)
+          // res.send({"msg": "Activated successfully"})
           // else res.send({"msg": "Something went wrong"})
         }
     }
@@ -205,9 +295,9 @@ app.put('/userapi/:email/deactivate', function(req, res) {
         } else {
           var user = data['Items'][0]
           user['active'] = 0
-          var result = updateUser(user)
-          console.log(result)
-          res.send({"msg": "Deactivated successfully"})
+          var result = updateUser(user, res)
+          // console.log(result)
+          // res.send({"msg": "Deactivated successfully"})
           // else res.send({"msg": "Something went wrong"})
         }
     }

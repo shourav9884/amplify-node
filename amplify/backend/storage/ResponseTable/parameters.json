@@ -1,0 +1,7 @@
+{
+    "tableName": "ResponseTable",
+    "partitionKeyName": "email",
+    "partitionKeyType": "S",
+    "sortKeyName": "uuid",
+    "sortKeyType": "S"
+}

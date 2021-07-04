@@ -23,6 +23,22 @@
     "storagePaymentTableArn": {
       "Type": "String",
       "Default": "storagePaymentTableArn"
+    },
+    "storagePaymentRechargeTableName": {
+      "Type": "String",
+      "Default": "storagePaymentRechargeTableName"
+    },
+    "storagePaymentRechargeTableArn": {
+      "Type": "String",
+      "Default": "storagePaymentRechargeTableArn"
+    },
+    "storagePaymentRechargeTableStreamArn": {
+      "Type": "String",
+      "Default": "storagePaymentRechargeTableStreamArn"
+    },
+    "storagePaymentTableStreamArn": {
+      "Type": "String",
+      "Default": "storagePaymentTableStreamArn"
     }
   },
   "Conditions": {
@@ -77,6 +93,24 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "STORAGE_PAYMENTRECHARGETABLE_NAME": {
+              "Ref": "storagePaymentRechargeTableName"
+            },
+            "STORAGE_PAYMENTRECHARGETABLE_ARN": {
+              "Ref": "storagePaymentRechargeTableArn"
+            },
+            "STORAGE_PAYMENTRECHARGETABLE_STREAMARN": {
+              "Ref": "storagePaymentRechargeTableStreamArn"
+            },
+            "STORAGE_PAYMENTTABLE_NAME": {
+              "Ref": "storagePaymentTableName"
+            },
+            "STORAGE_PAYMENTTABLE_ARN": {
+              "Ref": "storagePaymentTableArn"
+            },
+            "STORAGE_PAYMENTTABLE_STREAMARN": {
+              "Ref": "storagePaymentTableStreamArn"
             }
           }
         },
@@ -190,6 +224,91 @@
                     [
                       {
                         "Ref": "storagePaymentTableArn"
+                      },
+                      "index/*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "AmplifyResourcesPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "amplify-lambda-execution-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Put*",
+                "dynamodb:Create*",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:Update*",
+                "dynamodb:RestoreTable*",
+                "dynamodb:Delete*"
+              ],
+              "Resource": [
+                {
+                  "Ref": "storagePaymentTableArn"
+                },
+                {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      {
+                        "Ref": "storagePaymentTableArn"
+                      },
+                      "index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Put*",
+                "dynamodb:Create*",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:Update*",
+                "dynamodb:RestoreTable*",
+                "dynamodb:Delete*"
+              ],
+              "Resource": [
+                {
+                  "Ref": "storagePaymentRechargeTableArn"
+                },
+                {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      {
+                        "Ref": "storagePaymentRechargeTableArn"
                       },
                       "index/*"
                     ]

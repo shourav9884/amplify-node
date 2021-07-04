@@ -2,13 +2,19 @@
   "lambdaLayers": [],
   "permissions": {
     "storage": {
-      "PaymentTable": [
+      "UserTable": [
         "create",
         "read",
         "update",
         "delete"
       ],
-      "PaymentRechargeTable": [
+      "DataTable": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "ResponseTable": [
         "create",
         "read",
         "update",

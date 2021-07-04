@@ -16,17 +16,13 @@
     "s3Key": {
       "Type": "String"
     },
-    "storagePaymentTableName": {
+    "storageDataTableName": {
       "Type": "String",
-      "Default": "storagePaymentTableName"
+      "Default": "storageDataTableName"
     },
-    "storagePaymentTableArn": {
+    "storageDataTableArn": {
       "Type": "String",
-      "Default": "storagePaymentTableArn"
-    },
-    "storagePaymentTableStreamArn": {
-      "Type": "String",
-      "Default": "storagePaymentTableStreamArn"
+      "Default": "storageDataTableArn"
     },
     "storageUserTableName": {
       "Type": "String",
@@ -39,6 +35,22 @@
     "storageUserTableStreamArn": {
       "Type": "String",
       "Default": "storageUserTableStreamArn"
+    },
+    "storageDataTableStreamArn": {
+      "Type": "String",
+      "Default": "storageDataTableStreamArn"
+    },
+    "storageResponseTableName": {
+      "Type": "String",
+      "Default": "storageResponseTableName"
+    },
+    "storageResponseTableArn": {
+      "Type": "String",
+      "Default": "storageResponseTableArn"
+    },
+    "storageResponseTableStreamArn": {
+      "Type": "String",
+      "Default": "storageResponseTableStreamArn"
     }
   },
   "Conditions": {
@@ -71,12 +83,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "userapilambda",
+            "dataapi",
             {
               "Fn::Join": [
                 "",
                 [
-                  "userapilambda",
+                  "dataapi",
                   "-",
                   {
                     "Ref": "env"
@@ -94,15 +106,6 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "STORAGE_PAYMENTTABLE_NAME": {
-              "Ref": "storagePaymentTableName"
-            },
-            "STORAGE_PAYMENTTABLE_ARN": {
-              "Ref": "storagePaymentTableArn"
-            },
-            "STORAGE_PAYMENTTABLE_STREAMARN": {
-              "Ref": "storagePaymentTableStreamArn"
-            },
             "STORAGE_USERTABLE_NAME": {
               "Ref": "storageUserTableName"
             },
@@ -111,6 +114,24 @@
             },
             "STORAGE_USERTABLE_STREAMARN": {
               "Ref": "storageUserTableStreamArn"
+            },
+            "STORAGE_DATATABLE_NAME": {
+              "Ref": "storageDataTableName"
+            },
+            "STORAGE_DATATABLE_ARN": {
+              "Ref": "storageDataTableArn"
+            },
+            "STORAGE_DATATABLE_STREAMARN": {
+              "Ref": "storageDataTableStreamArn"
+            },
+            "STORAGE_RESPONSETABLE_NAME": {
+              "Ref": "storageResponseTableName"
+            },
+            "STORAGE_RESPONSETABLE_ARN": {
+              "Ref": "storageResponseTableArn"
+            },
+            "STORAGE_RESPONSETABLE_STREAMARN": {
+              "Ref": "storageResponseTableStreamArn"
             }
           }
         },
@@ -131,12 +152,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "amplifynodeLambdaRole87aa1273",
+            "amplifynodeLambdaRolef19df39c",
             {
               "Fn::Join": [
                 "",
                 [
-                  "amplifynodeLambdaRole87aa1273",
+                  "amplifynodeLambdaRolef19df39c",
                   "-",
                   {
                     "Ref": "env"
@@ -202,6 +223,34 @@
                   }
                 ]
               }
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:DescribeTable",
+                "dynamodb:GetItem",
+                "dynamodb:Query",
+                "dynamodb:Scan",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem"
+              ],
+              "Resource": [
+                {
+                  "Ref": "storageDataTableArn"
+                },
+                {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      {
+                        "Ref": "storageDataTableArn"
+                      },
+                      "index/*"
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         }
@@ -240,14 +289,14 @@
               ],
               "Resource": [
                 {
-                  "Ref": "storagePaymentTableArn"
+                  "Ref": "storageUserTableArn"
                 },
                 {
                   "Fn::Join": [
                     "/",
                     [
                       {
-                        "Ref": "storagePaymentTableArn"
+                        "Ref": "storageUserTableArn"
                       },
                       "index/*"
                     ]
@@ -273,14 +322,47 @@
               ],
               "Resource": [
                 {
-                  "Ref": "storageUserTableArn"
+                  "Ref": "storageDataTableArn"
                 },
                 {
                   "Fn::Join": [
                     "/",
                     [
                       {
-                        "Ref": "storageUserTableArn"
+                        "Ref": "storageDataTableArn"
+                      },
+                      "index/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Put*",
+                "dynamodb:Create*",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:Update*",
+                "dynamodb:RestoreTable*",
+                "dynamodb:Delete*"
+              ],
+              "Resource": [
+                {
+                  "Ref": "storageResponseTableArn"
+                },
+                {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      {
+                        "Ref": "storageResponseTableArn"
                       },
                       "index/*"
                     ]

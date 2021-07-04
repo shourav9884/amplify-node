@@ -1,0 +1,7 @@
+{
+    "tableName": "DataTable",
+    "partitionKeyName": "email",
+    "partitionKeyType": "S",
+    "sortKeyName": "uuid",
+    "sortKeyType": "S"
+}

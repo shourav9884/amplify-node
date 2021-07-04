@@ -1,0 +1,7 @@
+{
+    "tableName": "PaymentRechargeTable",
+    "partitionKeyName": "email",
+    "partitionKeyType": "S",
+    "sortKeyName": "create_time",
+    "sortKeyType": "N"
+}

@@ -1,4 +1,13 @@
-/*
+/* Amplify Params - DO NOT EDIT
+	ENV
+	REGION
+	STORAGE_PAYMENTRECHARGETABLE_ARN
+	STORAGE_PAYMENTRECHARGETABLE_NAME
+	STORAGE_PAYMENTRECHARGETABLE_STREAMARN
+	STORAGE_PAYMENTTABLE_ARN
+	STORAGE_PAYMENTTABLE_NAME
+	STORAGE_PAYMENTTABLE_STREAMARN
+Amplify Params - DO NOT EDIT *//*
 Copyright 2017 - 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
     http://aws.amazon.com/apache2.0/
@@ -17,7 +26,7 @@ AWS.config.update({ region: process.env.TABLE_REGION });
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-let tableName = "PaymentTable";
+let tableName = "PaymentRechargeTable";
 if(process.env.ENV && process.env.ENV !== "NONE") {
   tableName = tableName + '-' + process.env.ENV;
 }
@@ -25,8 +34,8 @@ if(process.env.ENV && process.env.ENV !== "NONE") {
 const userIdPresent = false; // TODO: update in case is required to use that definition
 const partitionKeyName = "email";
 const partitionKeyType = "S";
-const sortKeyName = "registration_date";
-const sortKeyType = "S";
+const sortKeyName = "create_time";
+const sortKeyType = "N";
 const hasSortKey = sortKeyName !== "";
 const path = "/payment";
 const UNAUTH = 'UNAUTH';
@@ -86,7 +95,7 @@ const updateUser = (user, response) => {
  * HTTP Get method for list objects *
  ********************************/
 
- app.get(path +'/:email/payment-fields', (req, res) => {
+app.get(path +'/:email', (req, res) => {
   var params = {
     TableName: tableName,
     KeyConditionExpression: "#email = :email",
@@ -103,19 +112,14 @@ const updateUser = (user, response) => {
         res.status(500).send(err)
     } else {
         console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
-        if(data['Items'].length == 0) {
-          res.status(404).send({"msg": "User not found"})
-        } else {
-          var body = {
-            "credit": data['Items'][0]['credit'],
-            "balance": data['Items'][0]['balance'],
-            "queries": data['Items'][0]['queries'],
-          }
-          res.send(body)
-        }
+        res.send(data['Items'])
     }
   });
 })
+
+
+
+
 
  app.put(path + '/:email/payment-fields/by-user', (req, res) => {
 
@@ -294,65 +298,80 @@ app.put(path + '/:email/payment-fields/by-admin', (req, res) => {
 // * HTTP post method for insert object *
 // *************************************/
 
-// app.post(path, function(req, res) {
+app.post(path, function(req, res) {
 
-//   if (userIdPresent) {
-//     req.body['userId'] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
-//   }
+  // if (userIdPresent) {
+  //   req.body['userId'] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
+  // }
+  req.body['status'] = "Pending"
+  req.body['create_time'] = Date.now()
 
-//   let putItemParams = {
-//     TableName: tableName,
-//     Item: req.body
-//   }
-//   dynamodb.put(putItemParams, (err, data) => {
-//     if(err) {
-//       res.statusCode = 500;
-//       res.json({error: err, url: req.url, body: req.body});
-//     } else{
-//       res.json({success: 'post call succeed!', url: req.url, data: data})
-//     }
-//   });
-// });
+  let putItemParams = {
+    TableName: tableName,
+    Item: req.body
+  }
+  dynamodb.put(putItemParams, (err, data) => {
+    if(err) {
+      res.statusCode = 500;
+      res.json({error: err, url: req.url, body: req.body});
+    } else{
+      res.json({success: 'Payment recharge created'})
+    }
+  });
+});
 
 // /**************************************
 // * HTTP remove method to delete object *
 // ***************************************/
 
-// app.delete(path + '/object' + hashKeyPath + sortKeyPath, function(req, res) {
-//   var params = {};
-//   if (userIdPresent && req.apiGateway) {
-//     params[partitionKeyName] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
-//   } else {
-//     params[partitionKeyName] = req.params[partitionKeyName];
-//      try {
-//       params[partitionKeyName] = convertUrlType(req.params[partitionKeyName], partitionKeyType);
-//     } catch(err) {
-//       res.statusCode = 500;
-//       res.json({error: 'Wrong column type ' + err});
-//     }
-//   }
-//   if (hasSortKey) {
-//     try {
-//       params[sortKeyName] = convertUrlType(req.params[sortKeyName], sortKeyType);
-//     } catch(err) {
-//       res.statusCode = 500;
-//       res.json({error: 'Wrong column type ' + err});
-//     }
-//   }
+app.delete(path + hashKeyPath + sortKeyPath + "/by-user", function(req, res) {
+  var params = {};
+  if (userIdPresent && req.apiGateway) {
+    params[partitionKeyName] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
+  } else {
+    params[partitionKeyName] = req.params[partitionKeyName];
+     try {
+      params[partitionKeyName] = convertUrlType(req.params[partitionKeyName], partitionKeyType);
+    } catch(err) {
+      res.statusCode = 500;
+      res.json({error: 'Wrong column type ' + err});
+    }
+  }
+  if (hasSortKey) {
+    try {
+      params[sortKeyName] = convertUrlType(req.params[sortKeyName], sortKeyType);
+    } catch(err) {
+      res.statusCode = 500;
+      res.json({error: 'Wrong column type ' + err});
+    }
+  }
 
-//   let removeItemParams = {
-//     TableName: tableName,
-//     Key: params
-//   }
-//   dynamodb.delete(removeItemParams, (err, data)=> {
-//     if(err) {
-//       res.statusCode = 500;
-//       res.json({error: err, url: req.url});
-//     } else {
-//       res.json({url: req.url, data: data});
-//     }
-//   });
-// });
+  let removeItemParams = {
+    TableName: tableName,
+    Key: params
+  }
+  dynamodb.get(removeItemParams, (err, data)=> {
+    if(err) {
+      res.statusCode = 500;
+      res.json({error: err});
+    } else {
+      if(data['Item']['status'] != 'Pending') {
+        res.status(400).json({msg: "You can delete only pending request"})
+      } else {
+        dynamodb.delete(removeItemParams, (errRem, dataRem) => {
+          if(errRem){
+            res.statusCode = 500;
+            res.json({error: errRem});
+          }
+          else {
+            res.json({msg: "Deleted"})
+          }
+        })
+      }
+      
+    }
+  });
+});
 app.listen(3000, function() {
     console.log("App started")
 });

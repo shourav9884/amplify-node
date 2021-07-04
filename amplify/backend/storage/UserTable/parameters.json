@@ -1,0 +1,7 @@
+{
+    "tableName": "UserTable",
+    "partitionKeyName": "email",
+    "partitionKeyType": "S",
+    "sortKeyName": "date",
+    "sortKeyType": "S"
+}

@@ -15,11 +15,44 @@
       "function": {
         "paymentapilamda": {
           "deploymentBucketName": "amplify-amplifynode-dev-231329-deployment",
-          "s3Key": "amplify-builds/paymentapilamda-4a2f634a6f7551617541-build.zip"
+          "s3Key": "amplify-builds/paymentapilamda-716f344272594d4e4a38-build.zip"
         },
         "userapilambda": {
           "deploymentBucketName": "amplify-amplifynode-dev-231329-deployment",
-          "s3Key": "amplify-builds/userapilambda-567563776636704c4444-build.zip"
+          "s3Key": "amplify-builds/userapilambda-51564f2f656653384944-build.zip"
+        }
+      }
+    }
+  },
+  "amplify": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amplifynode-amplify-132715-authRole",
+      "UnauthRoleArn": "arn:aws:iam::469518143802:role/amplify-amplifynode-amplify-132715-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::469518143802:role/amplify-amplifynode-amplify-132715-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-amplifynode-amplify-132715-deployment",
+      "UnauthRoleName": "amplify-amplifynode-amplify-132715-unauthRole",
+      "StackName": "amplify-amplifynode-amplify-132715",
+      "StackId": "arn:aws:cloudformation:ap-south-1:469518143802:stack/amplify-amplifynode-amplify-132715/430f5f40-dc99-11eb-a0c2-027f7a3155bc",
+      "AmplifyAppId": "d3xyo21j3dqm7"
+    },
+    "categories": {
+      "function": {
+        "userapilambda": {
+          "deploymentBucketName": "amplify-amplifynode-amplify-132715-deployment",
+          "s3Key": "amplify-builds/userapilambda-4a303737776a62544c4d-build.zip"
+        },
+        "paymentapilamda": {
+          "deploymentBucketName": "amplify-amplifynode-amplify-132715-deployment",
+          "s3Key": "amplify-builds/paymentapilamda-6b7837436c41514e4248-build.zip"
+        },
+        "dataapi": {
+          "deploymentBucketName": "amplify-amplifynode-amplify-132715-deployment",
+          "s3Key": "amplify-builds/dataapi-77334163685367384b4b-build.zip"
+        },
+        "responseapi": {
+          "deploymentBucketName": "amplify-amplifynode-amplify-132715-deployment",
+          "s3Key": "amplify-builds/responseapi-64726d63556c436c4c4c-build.zip"
         }
       }
     }

@@ -1,54 +1,93 @@
 {
-  "paths": [
-    {
-      "name": "/userapi",
-      "lambdaFunction": "userapilambda",
-      "privacy": {
-        "open": true
-      },
-      "policyResourceName": "/userapi"
+    "paths": [
+        {
+            "name": "/payment",
+            "lambdaFunction": "paymentapilamda",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/payment"
+        },
+        {
+            "name": "/userapi",
+            "lambdaFunction": "userapilambda",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/userapi"
+        },
+        {
+            "name": "/data",
+            "lambdaFunction": "dataapi",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/data"
+        },
+        {
+            "name": "/responses",
+            "lambdaFunction": "responseapi",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/responses"
+        }
+    ],
+    "resourceName": "apieda218d0",
+    "apiName": "apieda218d0",
+    "functionArns": [
+        {
+            "lambdaFunction": "paymentapilamda"
+        },
+        {
+            "lambdaFunction": "userapilambda"
+        },
+        {
+            "lambdaFunction": "dataapi"
+        },
+        {
+            "lambdaFunction": "responseapi"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "amplify-amplifynode-amplify-132715-authRole",
+        "unAuthRoleName": "amplify-amplifynode-amplify-132715-unauthRole"
     },
-    {
-      "name": "/payment",
-      "lambdaFunction": "paymentapilamda",
-      "privacy": {
-        "open": true
-      },
-      "policyResourceName": "/payment"
-    }
-  ],
-  "resourceName": "apieda218d0",
-  "apiName": "apieda218d0",
-  "functionArns": [
-    {
-      "lambdaFunction": "userapilambda"
-    },
-    {
-      "lambdaFunction": "paymentapilamda"
-    }
-  ],
-  "privacy": {
-    "auth": 0,
-    "unauth": 0,
-    "authRoleName": "amplify-amplifynode-dev-231329-authRole",
-    "unAuthRoleName": "amplify-amplifynode-dev-231329-unauthRole"
-  },
-  "dependsOn": [
-    {
-      "category": "function",
-      "resourceName": "userapilambda",
-      "attributes": [
-        "Name",
-        "Arn"
-      ]
-    },
-    {
-      "category": "function",
-      "resourceName": "paymentapilamda",
-      "attributes": [
-        "Name",
-        "Arn"
-      ]
-    }
-  ]
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "paymentapilamda",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        },
+        {
+            "category": "function",
+            "resourceName": "userapilambda",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        },
+        {
+            "category": "function",
+            "resourceName": "dataapi",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        },
+        {
+            "category": "function",
+            "resourceName": "responseapi",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ],
+    "uuid": "8046716e"
 }
